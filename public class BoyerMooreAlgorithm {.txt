@@ -1,0 +1,39 @@
+public class BoyerMooreAlgorithm {
+    private static final int ALPHABET_SIZE = 256;
+
+    public static int searchPattern(String text, String pattern) {
+        int m = pattern.length();
+        int n = text.length();
+        int[] badChar = new int[ALPHABET_SIZE];
+
+        badCharHeuristic(pattern, m, badChar);
+
+        int s = 0; // зсув шаблону щодо тексту
+
+        while (s <= (n - m)) {
+            int j = m - 1;
+
+            while (j >= 0 && pattern.charAt(j) == text.charAt(s + j)) {
+                j--;
+            }
+
+            if (j < 0) {
+                return s;
+            } else {
+                s += Math.max(1, j - badChar[text.charAt(s + j)]);
+            }
+        }
+
+        return -1;
+    }
+
+    private static void badCharHeuristic(String pattern, int m, int[] badChar) {
+        for (int i = 0; i < ALPHABET_SIZE; i++) {
+            badChar[i] = -1;
+        }
+
+        for (int i = 0; i < m; i++) {
+            badChar[pattern.charAt(i)] = i;
+        }
+    }
+}
